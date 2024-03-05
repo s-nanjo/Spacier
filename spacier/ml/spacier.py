@@ -123,6 +123,11 @@ def check(df_X):
         return df_X
 
 
+def uncertainty(self, query_n):      
+    new_index = list(np.argpartition(-self.sigma[:, 0], query_n)[:query_n])
+    return new_index
+
+
 def PI_integral(mu, sigma, target_range):
     return (
         stats.norm.cdf(target_range[1] - mu, scale=sigma) -
