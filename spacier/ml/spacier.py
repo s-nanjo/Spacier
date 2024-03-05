@@ -82,6 +82,10 @@ class BO():
         self.mu = mu
         self.sigma = sigma
 
+    def uncertainty(self, query_n):     
+        new_index = list(np.argpartition(-self.sigma[:, 0], query_n)[:query_n])
+        return new_index
+
     def EI(self, query_n):
         ei = np.array([
             EI_integral(
@@ -93,6 +97,12 @@ class BO():
         ])
         new_index = list(np.argpartition(-ei, query_n)[:query_n])
         return new_index
+
+    def UCB(self, query_n):
+        kappa = np.sqrt(np.log(len(self.index_train))/len(self.index_train))
+        ucb = self.mu[:, 0] + kappa*self.sigma[:, 0]
+        test_new_idx = list(np.argpartition(-ucb, query_n)[:query_n])
+        return test_new_idx
 
     def PI(self, target_range, query_n):
         pi = np.ones(len(self.df_pool_X))
@@ -121,11 +131,6 @@ def check(df_X):
         return df_X.values
     if isinstance(df_X, np.ndarray):
         return df_X
-
-
-def uncertainty(self, query_n):      
-    new_index = list(np.argpartition(-self.sigma[:, 0], query_n)[:query_n])
-    return new_index
 
 
 def PI_integral(mu, sigma, target_range):
