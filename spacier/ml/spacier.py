@@ -82,7 +82,7 @@ class BO():
         self.mu = mu
         self.sigma = sigma
 
-    def uncertainty(self, query_n):     
+    def uncertainty(self, query_n):
         new_index = list(np.argpartition(-self.sigma[:, 0], query_n)[:query_n])
         return new_index
 
