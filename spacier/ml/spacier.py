@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 
 from scipy import stats
+from . import model
 
 import warnings
 warnings.simplefilter("ignore")
@@ -68,17 +69,20 @@ class BO():
             df_tmp = self.df[self.target].iloc[self.index_train, :]
             self.df_sc = df_tmp.apply(stats.zscore, axis=0)
             for _ in range(len(self.target)):
-                mu[:, _], sigma[:, _] = eval("model." + self.model_name +
-                                             "(self.df_X[self.index_train,:], "
-                                             "self.df_sc[[self.target[_]]], "
-                                             "self.df_pool_X)")
+                method_to_call = getattr(model, self.model_name)
+                mu[:, _], sigma[:, _] = method_to_call(
+                    self.df_X[self.index_train, :],
+                    self.df_sc[[self.target[_]]],
+                    self.df_pool_X
+                )
         else:
             for _ in range(len(self.target)):
-                mu[:, _], sigma[:, _] = eval("model." + self.model_name +
-                                             "(self.df_X[self.index_train,:], "
-                                             "self.df[[self.target[_]]]"
-                                             ".iloc[self.index_train], "
-                                             "self.df_pool_X)")
+                method_to_call = getattr(model, self.model_name)
+                mu[:, _], sigma[:, _] = method_to_call(
+                    self.df_X[self.index_train, :],
+                    self.df[[self.target[_]]].iloc[self.index_train],
+                    self.df_pool_X
+                )
         self.mu = mu
         self.sigma = sigma
 
