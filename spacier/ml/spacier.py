@@ -97,6 +97,11 @@ class BO():
     - target (list): List of target variables.
     - standardization (bool): Flag indicating whether to
     perform standardization on the data.
+    - standardization : bool, default=False
+    A flag that indicates whether to perform standardization on the data.
+    If True, standardization is applied only to the output `y`,
+    leaving the input `x` unaltered. This process involves scaling
+    the output `y` to have a mean of 0 and a standard deviation of 1.
     """
     def __init__(
             self,
