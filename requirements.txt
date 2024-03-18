@@ -1,0 +1,10 @@
+# Essential dependencies
+numpy
+pandas
+scipy
+scikit-learn
+
+# Optional dependencies
+GPy
+torch
+gpytorch
