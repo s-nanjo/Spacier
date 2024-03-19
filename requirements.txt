@@ -8,3 +8,4 @@ scikit-learn
 GPy
 torch
 gpytorch
+radonpy-pypi

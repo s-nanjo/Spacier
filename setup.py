@@ -22,6 +22,7 @@ setup(
             'GPy',
             'torch',
             'gpytorch',
+            'radonpy-pypi',
         ]
     },
     classifiers=[
