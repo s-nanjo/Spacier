@@ -1,4 +1,4 @@
-# Spacier Library
+# Spacier
 
 The `spacier` library is a Python package dedicated to advancing materials science research by providing tools for efficient data exploration and analysis, particularly in the field of polymers. It leverages various sampling and optimization techniques, including Bayesian Optimization (BO), to navigate complex material spaces effectively.
 
