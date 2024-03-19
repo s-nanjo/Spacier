@@ -6,6 +6,7 @@ The `spacier` library is a Python package dedicated to advancing materials scien
 - **Bayesian Optimization:** Implements BO for efficient exploration of high-dimensional material spaces.
 - **Sampling Methods:** Includes Expected Improvement (EI), Probability of Improvement (PI), and Expected Hypervolume Improvement (EHVI) among others for targeted data sampling.
 - **Pareto Front Exploration:** Support for multi-objective optimization to balance trade-offs between competing material properties.
+- **Automated Job Submission Workflow for Polymer Simulations:** `spacier` demonstrates the process of running Bayesian optimization on existing datasets, suggesting new candidates for calculation, and preparing the submission scripts of computational jobs for [RadonPy](https://github.com/RadonPy/RadonPy) simulations to various queuing systems. This functionality exemplifies how `spacier` bridges data analysis with practical computational workflows, facilitating the seamless integration of computational material science research and simulation-based validation.
 
 ## Installation
 
