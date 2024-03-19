@@ -41,6 +41,14 @@ This installs `spacier` along with its necessary dependencies. For development p
 pip install -e .
 ```
 
+`Spacier` also offers advanced features that you can optionally install. These features provide the installation of other Gaussian Process packages and [Radonpy](https://github.com/RadonPy/RadonPy).
+
+To install `Spacier` with these advanced features, use the following command:
+
+```
+pip install .[advanced]
+```
+
 ## Usage
 
 Getting started with `spacier` is straightforward. Below is a basic example to illustrate the initial steps of utilizing the library. For comprehensive examples, including advanced functionalities and specific use cases, please refer to the [examples](./examples/) directory in this repository.
