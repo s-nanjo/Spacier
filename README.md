@@ -51,6 +51,7 @@ Getting started with `spacier` is straightforward. Below is a basic example to i
 To kick off your journey with `spacier`, start by importing the necessary modules. Here's a simple code snippet:
 
 ```python
+import pandas as pd
 from spacier.ml import spacier
 
 # Load the data
