@@ -3,8 +3,6 @@
 The `spacier` library is a Python package dedicated to advancing materials science research by providing tools for efficient data exploration and analysis, particularly in the field of polymers. It leverages various sampling and optimization techniques, including Bayesian Optimization (BO), to navigate complex material spaces effectively.
 
 ## Features
-
-- **Data Exploration:** Tools to load, visualize, and analyze materials science datasets.
 - **Bayesian Optimization:** Implements BO for efficient exploration of high-dimensional material spaces.
 - **Sampling Methods:** Includes Expected Improvement (EI), Probability of Improvement (PI), and Expected Hypervolume Improvement (EHVI) among others for targeted data sampling.
 - **Pareto Front Exploration:** Support for multi-objective optimization to balance trade-offs between competing material properties.
