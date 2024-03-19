@@ -22,6 +22,11 @@ setup(
             'GPy',
             'torch',
             'gpytorch',
+            'psutil',
+            'matplotlib',
+            'rdkit>=2020.03',
+            'mdtraj>=1.9',
+            'lammps>=2020.03.03',
             'radonpy-pypi',
         ]
     },

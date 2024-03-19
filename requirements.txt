@@ -3,9 +3,3 @@ numpy
 pandas
 scipy
 scikit-learn
-
-# Optional dependencies
-GPy
-torch
-gpytorch
-radonpy-pypi
