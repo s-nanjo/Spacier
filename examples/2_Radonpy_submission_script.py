@@ -78,7 +78,7 @@ for num in index_list:
             ' \n',
             'python $HOME/RadonPy/sample_script/qm.py\n',  # Run QM calculation
             'python $HOME/RadonPy/sample_script/eq.py\n',  # Run equilibration
-            f'python add_data_v1.py {num_cycle}\n',  # Add data to database
+            f'python add_data.py {num_cycle}\n',  # Add data to database
             ' \n',
         ]
         # Write the shell script content
