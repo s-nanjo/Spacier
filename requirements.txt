@@ -1,0 +1,5 @@
+# Essential dependencies
+numpy
+pandas
+scipy
+scikit-learn
