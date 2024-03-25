@@ -15,7 +15,21 @@ __version__ = '0.0.3'
 
 
 def sklearn_GP(X_train, y_train, X_pool):
+    """
+    Perform Gaussian Process regression using scikit-learn.
+
+    Parameters:
+    - X_train (array-like): Training input samples.
+    - y_train (array-like): Target values for training.
+    - X_pool (array-like): Input samples for which predictions are required.
+
+    Returns:
+    - m (array-like): Predicted mean values for X_pool.
+    - s (array-like): Predicted standard deviation values for X_pool.
+    """
+
     from sklearn.gaussian_process import GaussianProcessRegressor
+    # Rest of the function code goes here
     from sklearn.gaussian_process.kernels import (WhiteKernel,
                                                   RBF,
                                                   ConstantKernel)
@@ -31,6 +45,25 @@ def sklearn_GP(X_train, y_train, X_pool):
 
 
 def sklearn_GP_st(X_train, y_train, X_pool):
+    """
+    Perform Gaussian Process regression using scikit-learn
+    with Standard Scaling pipeline.
+
+    Parameters:
+    - X_train: array-like, shape (n_samples, n_features)
+        The training input samples.
+    - y_train: array-like, shape (n_samples,)
+        The target values.
+    - X_pool: array-like, shape (n_samples, n_features)
+        The input samples for which predictions are needed.
+
+    Returns:
+    - m: array-like, shape (n_samples,)
+        The mean of the predicted target values.
+    - s: array-like, shape (n_samples,)
+        The standard deviation of the predicted target values.
+    """
+
     from sklearn.gaussian_process import GaussianProcessRegressor
     from sklearn.gaussian_process.kernels import (WhiteKernel,
                                                   RBF,
@@ -41,7 +74,7 @@ def sklearn_GP_st(X_train, y_train, X_pool):
     model = make_pipeline(
         StandardScaler(),
         GaussianProcessRegressor(
-            kernel=ConstantKernel()*RBF()+WhiteKernel(),
+            kernel=ConstantKernel() * RBF() + WhiteKernel(),
             alpha=0,
             normalize_y=True
         )
@@ -52,6 +85,19 @@ def sklearn_GP_st(X_train, y_train, X_pool):
 
 
 def GPy_GP(X_train, y_train, X_pool):
+    """
+    Perform Gaussian Process regression using GPy library.
+
+    Args:
+        X_train (numpy.ndarray): Training input data.
+        y_train (numpy.ndarray): Training target data.
+        X_pool (numpy.ndarray): Input data for prediction.
+
+    Returns:
+        tuple: A tuple containing the mean and standard deviation
+        of the predicted values.
+    """
+
     import GPy
     model = GPy.models.GPRegression(
         X_train,
@@ -64,6 +110,20 @@ def GPy_GP(X_train, y_train, X_pool):
 
 
 def gpytorch_GP(X_train, y_train, X_pool):
+    """
+    Perform Gaussian Process regression using the GPyTorch library.
+
+    Args:
+        X_train (numpy.ndarray): The training input data.
+        y_train (numpy.ndarray): The training target data.
+        X_pool (numpy.ndarray): The input data for which
+        predictions are to be made.
+
+    Returns:
+        tuple: A tuple containing the mean and standard
+        deviation of the predicted values.
+    """
+
     import torch
     import gpytorch
 
@@ -76,6 +136,23 @@ def gpytorch_GP(X_train, y_train, X_pool):
     train_y = torch.from_numpy(y_sc.astype(np.float32)).clone()
 
     class GP(gpytorch.models.ExactGP):
+        """
+        Gaussian Process model.
+
+        Args:
+            train_x (torch.Tensor): The training input data.
+            train_y (torch.Tensor): The training target data.
+            likelihood (gpytorch.likelihoods.Likelihood):
+            The likelihood function.
+
+        Attributes:
+            mean_module (gpytorch.means.Mean):
+            The mean module for the GP model.
+
+            covar_module (gpytorch.kernels.Kernel):
+            The covariance module for the GP model.
+        """
+
         def __init__(self, train_x, train_y, likelihood):
             super().__init__(train_x, train_y, likelihood)
             self.mean_module = gpytorch.means.ZeroMean()
@@ -84,6 +161,16 @@ def gpytorch_GP(X_train, y_train, X_pool):
             )
 
         def forward(self, x):
+            """
+            Forward pass of the GP model.
+
+            Args:
+                x (torch.Tensor): The input data.
+
+            Returns:
+                gpytorch.distributions.MultivariateNormal:
+                The predicted distribution.
+            """
             mean = self.mean_module(x)
             covar = self.covar_module(x)
             return gpytorch.distributions.MultivariateNormal(mean, covar)
