@@ -11,8 +11,28 @@ import numpy as np
 import warnings
 warnings.simplefilter("ignore")
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
+
+def Mymodel(X_train, y_train, X_pool):
+    """
+    Perform User-defined model.
+
+    Parameters:
+    - X_train: array-like, shape (n_samples, n_features)
+        The training input samples.
+    - y_train: array-like, shape (n_samples,)
+        The target values.
+    - X_pool: array-like, shape (n_samples, n_features)
+        The input samples for which predictions are needed.
+
+    Returns:
+    - m: array-like, shape (n_samples,)
+        The mean of the predicted target values.
+    - s: array-like, shape (n_samples,)
+        The standard deviation of the predicted target values.
+    """
+    return m, s
 
 def sklearn_GP(X_train, y_train, X_pool):
     """
@@ -42,47 +62,6 @@ def sklearn_GP(X_train, y_train, X_pool):
     model.fit(X_train, y_train)
     m, s = model.predict(X_pool, return_std=True)
     return m, s
-
-
-def sklearn_GP_st(X_train, y_train, X_pool):
-    """
-    Perform Gaussian Process regression using scikit-learn
-    with Standard Scaling pipeline.
-
-    Parameters:
-    - X_train: array-like, shape (n_samples, n_features)
-        The training input samples.
-    - y_train: array-like, shape (n_samples,)
-        The target values.
-    - X_pool: array-like, shape (n_samples, n_features)
-        The input samples for which predictions are needed.
-
-    Returns:
-    - m: array-like, shape (n_samples,)
-        The mean of the predicted target values.
-    - s: array-like, shape (n_samples,)
-        The standard deviation of the predicted target values.
-    """
-
-    from sklearn.gaussian_process import GaussianProcessRegressor
-    from sklearn.gaussian_process.kernels import (WhiteKernel,
-                                                  RBF,
-                                                  ConstantKernel)
-    from sklearn.pipeline import make_pipeline
-    from sklearn.preprocessing import StandardScaler
-
-    model = make_pipeline(
-        StandardScaler(),
-        GaussianProcessRegressor(
-            kernel=ConstantKernel() * RBF() + WhiteKernel(),
-            alpha=0,
-            normalize_y=True
-        )
-    )
-    model.fit(X_train, y_train)
-    m, s = model.predict(X_pool, return_std=True)
-    return m, s
-
 
 def GPy_GP(X_train, y_train, X_pool):
     """
