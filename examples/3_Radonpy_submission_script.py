@@ -28,7 +28,6 @@ index_list = spacier.BO(
     df_X,
     df_X_pool,
     df,
-    df_pool,
     "sklearn_GP",  # The Gaussian Process model from scikit-learn
     ["refractive_index", "abbe_number"],  # Target properties for optimization
     standardization=True  # Standardize target before optimization
@@ -45,10 +44,9 @@ for num in index_list:
         # Define the content of the shell script
         df_sh = [
             '#!/bin/bash\n',
-            '#PBS -q SQUID\n',  # Job queue
-            '#PBS --group=$GROUP\n',  # Job group
-            '#PBS -l cpunum_job=76\n',  # CPU number request
-            '#PBS -l elapstim_req=72:00:00\n',  # Job time request
+            '#PBS -q batch\n',  # Job queue
+            '#PBS -l nodes=1:ppn=64\n',  # CPU number request
+            '#PBS -l walltime=72:00:00\n',  # Job time request
             'cd $PBS_O_WORKDIR\n',  # Change to working directory
             ' \n',
             'export PATH=$HOME/miniconda3/bin:$PATH\n',  # Set PATH for conda
@@ -64,16 +62,16 @@ for num in index_list:
             f'export RadonPy_SMILES="{smi}"\n',  # Set SMILES for the monomer
             f'export RadonPy_Monomer_Dir={smi}/analyze\n',  # Set directory for analysis
             'export RadonPy_OMP=0\n',  # OpenMP setting
-            'export RadonPy_MPI=76\n',  # MPI setting
+            'export RadonPy_MPI=64\n',  # MPI setting
             'export RadonPy_GPU=0\n',  # GPU setting
-            'export RadonPy_OMP_Psi4=76\n',  # Psi4 OpenMP setting
+            'export RadonPy_OMP_Psi4=64\n',  # Psi4 OpenMP setting
             'export RadonPy_MEM_Psi4=96000\n',  # Psi4 memory setting
             'export RadonPy_RetryEQ=4\n',  # Retry setting for equilibration
             ' \n',
             'export RadonPy_Conf_MM_MPI=0\n',  # MM MPI setting
             'export RadonPy_Conf_MM_OMP=2\n',  # MM OpenMP setting
             'export RadonPy_Conf_MM_MP=4\n',  # MM multiprocessing setting
-            'export RadonPy_Conf_Psi4_OMP=76\n',  # Psi4 OpenMP setting
+            'export RadonPy_Conf_Psi4_OMP=64\n',  # Psi4 OpenMP setting
             'export RadonPy_Conf_Psi4_MP=0\n',  # Psi4 multiprocessing setting
             ' \n',
             'python $HOME/RadonPy/sample_script/qm.py\n',  # Run QM calculation
