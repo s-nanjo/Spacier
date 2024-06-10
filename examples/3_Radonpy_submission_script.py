@@ -26,8 +26,8 @@ print(q)
 # selecting indices based on the EHVI method
 index_list = spacier.BO(
     df_X,
-    df_X_pool,
     df,
+    df_X_pool,
     "sklearn_GP",  # The Gaussian Process model from scikit-learn
     ["refractive_index", "abbe_number"],  # Target properties for optimization
     standardization=True  # Standardize target before optimization

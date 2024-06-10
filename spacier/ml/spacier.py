@@ -15,7 +15,7 @@ from . import model
 import warnings
 warnings.simplefilter("ignore")
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 
 class Random():
@@ -26,10 +26,10 @@ class Random():
     -----------
     df_X : pandas.DataFrame
         The feature matrix of the labeled data.
-    df_pool_X : pandas.DataFrame
-        The feature matrix of the unlabeled data pool.
     df : pandas.DataFrame
         The labeled data.
+    df_pool_X : pandas.DataFrame
+        The feature matrix of the unlabeled data pool.
 
     Attributes:
     -----------
@@ -37,10 +37,10 @@ class Random():
         A list of indices of the unlabeled data pool.
     df_X : pandas.DataFrame
         The feature matrix of the labeled data.
-    df_pool_X : pandas.DataFrame
-        The feature matrix of the unlabeled data pool.
     df : pandas.DataFrame
         The labeled data.
+    df_pool_X : pandas.DataFrame
+        The feature matrix of the unlabeled data pool.
 
     Methods:
     -----------
@@ -49,10 +49,10 @@ class Random():
         from the unlabeled data pool.
 
     """
-    def __init__(self, df_X, df_pool_X, df):
+    def __init__(self, df_X, df, df_pool_X):
         self.df_X = check(df_X)
-        self.df_pool_X = check(df_pool_X)
         self.df = df
+        self.df_pool_X = check(df_pool_X)
         self.index_pool = list(np.arange(self.df_pool_X.shape[0]))
         print("Number of candidates : ", len(self.index_pool))
 
@@ -83,8 +83,8 @@ class BO():
 
     Parameters:
     - df_X (DataFrame): Input features for training data.
-    - df_pool_X (DataFrame): Input features for candidate data.
     - df (DataFrame): Training data.
+    - df_pool_X (DataFrame): Input features for candidate data.
     - model_name (str): Name of the model to be used for optimization.
     - target (list): List of target variables.
     - standardization (bool): Flag indicating whether to
@@ -98,8 +98,8 @@ class BO():
     def __init__(
             self,
             df_X,
-            df_pool_X,
             df,
+            df_pool_X,
             model_name,
             target,
             standardization=False
