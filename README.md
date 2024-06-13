@@ -70,7 +70,7 @@ df = pd.read_csv(f"{data_path}/y.csv")
 df_pool = pd.read_csv(f"{data_path}/y_pool.csv")
 
 # Utilize Probability of Improvement (PI)
-new_index = spacier.BO(df_X, df_pool_X , df, df_pool, "sklearn_GP", ["Cp"]).PI([[3000, 4000]], 10)
+new_index = spacier.BO(df_X, df, df_pool_X, "sklearn_GP", ["Cp"]).PI([[3000, 4000]], 10)
 print(new_index)
 ```
 
