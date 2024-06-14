@@ -21,7 +21,7 @@ def Mymodel(X_train, y_train, X_pool):
     Example: Bayesian inference of linear regression.
 
     - Model: y = Xw
-    - Prior: p(w) = N(0, ∞)
+    - Prior: p(w) = N(0, v^{-1}), v^{-1} -> 0
     - Likelihood: p(y|X, w) = N(Xw, I)
       -> Posterior: p(w|y, X) = N((X^TX)^{-1}X^Ty, (X^TX)^{-1})
       -> Prediction distribution:
