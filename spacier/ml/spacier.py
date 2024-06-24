@@ -15,7 +15,7 @@ from . import model
 import warnings
 warnings.simplefilter("ignore")
 
-__version__ = '0.0.3'
+__version__ = '0.0.5'
 
 
 class Random():
@@ -26,12 +26,10 @@ class Random():
     -----------
     df_X : pandas.DataFrame
         The feature matrix of the labeled data.
-    df_pool_X : pandas.DataFrame
-        The feature matrix of the unlabeled data pool.
     df : pandas.DataFrame
         The labeled data.
-    df_pool : pandas.DataFrame
-        The unlabeled data pool.
+    df_pool_X : pandas.DataFrame
+        The feature matrix of the unlabeled data pool.
 
     Attributes:
     -----------
@@ -39,12 +37,10 @@ class Random():
         A list of indices of the unlabeled data pool.
     df_X : pandas.DataFrame
         The feature matrix of the labeled data.
-    df_pool_X : pandas.DataFrame
-        The feature matrix of the unlabeled data pool.
     df : pandas.DataFrame
         The labeled data.
-    df_pool : pandas.DataFrame
-        The unlabeled data pool.
+    df_pool_X : pandas.DataFrame
+        The feature matrix of the unlabeled data pool.
 
     Methods:
     -----------
@@ -53,15 +49,12 @@ class Random():
         from the unlabeled data pool.
 
     """
-    def __init__(self, df_X, df_pool_X, df, df_pool):
-        index_pool = list(df_pool.index)
-        print("Number of candidates : ", len(df_pool))
-
-        self.index_pool = index_pool
+    def __init__(self, df_X, df, df_pool_X):
         self.df_X = check(df_X)
-        self.df_pool_X = check(df_pool_X)
         self.df = df
-        self.df_pool = df_pool
+        self.df_pool_X = check(df_pool_X)
+        self.index_pool = list(np.arange(self.df_pool_X.shape[0]))
+        print("Number of candidates : ", len(self.index_pool))
 
     def sample(self, query_n):
         """
@@ -79,7 +72,7 @@ class Random():
             A list of randomly sampled indices from the unlabeled data pool.
 
         """
-        new_index = list(self.df_pool.sample(query_n).index)
+        new_index = list(np.random.choice(self.index_pool, query_n))
         return new_index
 
 
@@ -90,9 +83,8 @@ class BO():
 
     Parameters:
     - df_X (DataFrame): Input features for training data.
-    - df_pool_X (DataFrame): Input features for candidate data.
     - df (DataFrame): Training data.
-    - df_pool (DataFrame): Candidate data.
+    - df_pool_X (DataFrame): Input features for candidate data.
     - model_name (str): Name of the model to be used for optimization.
     - target (list): List of target variables.
     - standardization (bool): Flag indicating whether to
@@ -106,8 +98,8 @@ class BO():
     def __init__(
             self,
             df_X,
+            df,
             df_pool_X,
-            df, df_pool,
             model_name,
             target,
             standardization=False
@@ -116,19 +108,16 @@ class BO():
         for _ in target:
             q += "(df['" + str(_) + "'] != -9999) &"
 
-        index_train = list(df[eval(q[:-1])].index)
-        index_pool = list(df_pool.index)
-        print("Number of training data : ", len(index_train))
-        print("Number of candidates : ", len(df_pool))
-
-        self.index_train = index_train
-        self.index_pool = index_pool
         self.df_X = check(df_X)
         self.df_pool_X = check(df_pool_X)
         self.df = df
-        self.df_pool = df_pool
         self.model_name = model_name
         self.target = target
+
+        self.index_train = list(df[eval(q[:-1])].index)
+        self.index_pool = list(np.arange(self.df_pool_X.shape[0]))
+        print("Number of training data : ", len(self.index_train))
+        print("Number of candidates : ", len(self.index_pool))
 
         mu = np.zeros((len(self.df_pool_X), len(self.target)))
         sigma = np.zeros((len(self.df_pool_X), len(self.target)))
@@ -242,7 +231,7 @@ class BO():
                 r,
                 np.array([self.mu[_, 0], self.mu[_, 1]]),
                 np.array([self.sigma[_, 0], self.sigma[_, 1]]))[0]
-            for _ in range(len(self.df_pool))
+            for _ in range(len(self.df_pool_X))
         ])
         new_index = list(np.argpartition(-ehvi, query_n)[:query_n])
         return new_index

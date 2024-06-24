@@ -11,7 +11,46 @@ import numpy as np
 import warnings
 warnings.simplefilter("ignore")
 
-__version__ = '0.0.3'
+__version__ = '0.0.5'
+
+
+def Mymodel(X_train, y_train, X_pool):
+    """
+    Perform User-defined model.
+
+    Example: Bayesian inference of linear regression.
+
+    - Model: y = Xw
+    - Prior: p(w) = N(0, v^{-1}), v^{-1} -> 0
+    - Likelihood: p(y|X, w) = N(Xw, I)
+      -> Posterior: p(w|y, X) = N((X^TX)^{-1}X^Ty, (X^TX)^{-1})
+      -> Prediction distribution:
+         p(y_new|X_new) = N(X_new*(X^TX)^{-1}X^Ty, X_new*(X^TX)^{-1}*X_new + I)
+
+    Parameters:
+    - X_train: array-like, shape (n_samples, n_features)
+        The training input samples.
+    - y_train: array-like, shape (n_samples,)
+        The target values.
+    - X_pool: array-like, shape (n_samples, n_features)
+        The input samples for which predictions are needed.
+    Returns:
+    - m: array-like, shape (n_samples,)
+        The mean of the predicted target values.
+    - s: array-like, shape (n_samples,)
+        The standard deviation of the predicted target values.
+    """
+    sigma2 = 1
+    XTX_inv = np.linalg.inv(X_train.T @ X_train)
+    beta_hat = XTX_inv @ X_train.T @ y_train
+    posterior_cov = sigma2 * XTX_inv
+    m = X_pool @ beta_hat
+    v = np.array(
+        [X_pool[i] @ posterior_cov @ X_pool[i].T for i in range(
+            X_pool.shape[0]
+        )]
+    ) + sigma2
+    return np.squeeze(m), np.squeeze(np.sqrt(v))
 
 
 def sklearn_GP(X_train, y_train, X_pool):
@@ -38,46 +77,6 @@ def sklearn_GP(X_train, y_train, X_pool):
         kernel=(ConstantKernel() * RBF() + WhiteKernel()),
         alpha=0,
         normalize_y=True
-    )
-    model.fit(X_train, y_train)
-    m, s = model.predict(X_pool, return_std=True)
-    return m, s
-
-
-def sklearn_GP_st(X_train, y_train, X_pool):
-    """
-    Perform Gaussian Process regression using scikit-learn
-    with Standard Scaling pipeline.
-
-    Parameters:
-    - X_train: array-like, shape (n_samples, n_features)
-        The training input samples.
-    - y_train: array-like, shape (n_samples,)
-        The target values.
-    - X_pool: array-like, shape (n_samples, n_features)
-        The input samples for which predictions are needed.
-
-    Returns:
-    - m: array-like, shape (n_samples,)
-        The mean of the predicted target values.
-    - s: array-like, shape (n_samples,)
-        The standard deviation of the predicted target values.
-    """
-
-    from sklearn.gaussian_process import GaussianProcessRegressor
-    from sklearn.gaussian_process.kernels import (WhiteKernel,
-                                                  RBF,
-                                                  ConstantKernel)
-    from sklearn.pipeline import make_pipeline
-    from sklearn.preprocessing import StandardScaler
-
-    model = make_pipeline(
-        StandardScaler(),
-        GaussianProcessRegressor(
-            kernel=ConstantKernel() * RBF() + WhiteKernel(),
-            alpha=0,
-            normalize_y=True
-        )
     )
     model.fit(X_train, y_train)
     m, s = model.predict(X_pool, return_std=True)
