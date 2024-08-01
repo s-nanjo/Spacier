@@ -37,7 +37,7 @@ def Mymodel(X_train, y_train, X_pool):
     from sklearn.ensemble import RandomForestRegressor
     
     n_est = 100
-    RF_model = RandomForestRegressor(n_estimators= n_est, n_jobs= -1)
+    RF_model = RandomForestRegressor(n_estimators=n_est, n_jobs=-1)
     RF_model.fit(X_train, y_train)
     
     predictions = np.array([estimator.predict(X_pool) for estimator in RF_model.estimators_[:n_est]])   
