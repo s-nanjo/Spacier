@@ -18,14 +18,8 @@ def Mymodel(X_train, y_train, X_pool):
     """
     Perform User-defined model.
 
-    Example: Bayesian inference of linear regression.
-
-    - Model: y = Xw
-    - Prior: p(w) = N(0, v^{-1}), v -> 0
-    - Likelihood: p(y|X, w) = N(Xw, I)
-      -> Posterior: p(w|y, X) = N((X^TX)^{-1}X^Ty, (X^TX)^{-1})
-      -> Prediction distribution:
-         p(y_new|X_new) = N(X_new*(X^TX)^{-1}X^Ty, X_new*(X^TX)^{-1}*X_new + I)
+    Example: BO with Random Forest Surrogate Models.
+             (Liang et al. (2021). Benchmarking Bayesian optimization in materials science. npj Computational Materials, 7(1), 188.)
 
     Parameters:
     - X_train: array-like, shape (n_samples, n_features)
@@ -40,17 +34,17 @@ def Mymodel(X_train, y_train, X_pool):
     - s: array-like, shape (n_samples,)
         The standard deviation of the predicted target values.
     """
-    sigma2 = 1
-    XTX_inv = np.linalg.inv(X_train.T @ X_train)
-    beta_hat = XTX_inv @ X_train.T @ y_train
-    posterior_cov = sigma2 * XTX_inv
-    m = X_pool @ beta_hat
-    v = np.array(
-        [X_pool[i] @ posterior_cov @ X_pool[i].T for i in range(
-            X_pool.shape[0]
-        )]
-    ) + sigma2
-    return np.squeeze(m), np.squeeze(np.sqrt(v))
+    from sklearn.ensemble import RandomForestRegressor
+    
+    n_est = 100
+    RF_model = RandomForestRegressor(n_estimators= n_est, n_jobs= -1)
+    RF_model.fit(X_train, y_train)
+    
+    predictions = np.array([estimator.predict(X_pool) for estimator in RF_model.estimators_[:n_est]])   
+    m = np.mean(predictions, axis=0)
+    s = np.std(predictions, axis=0)
+    
+    return m, s 
 
 
 def sklearn_GP(X_train, y_train, X_pool):
