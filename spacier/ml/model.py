@@ -18,8 +18,8 @@ def Mymodel(X_train, y_train, X_pool):
     """
     Perform User-defined model.
 
-    Example: BO with Random Forest Surrogate Models.
-             (Liang et al. (2021). Benchmarking Bayesian optimization in materials science. npj Computational Materials, 7(1), 188.)
+    E.g., BO with Random Forest Surrogate Models.
+    (Liang et al. (2021). Benchmarking Bayesian optimization in materials science. npj Computational Materials, 7(1), 188.)
 
     Parameters:
     - X_train: array-like, shape (n_samples, n_features)
