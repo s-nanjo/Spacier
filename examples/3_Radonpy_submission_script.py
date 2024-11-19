@@ -8,7 +8,7 @@ import sys
 sys.path.append('../')  # Adjust path for local imports
 from spacier.ml import spacier
 
-DATA_DIR = "path/to/data"  # Replace with your data directory
+DATA_DIR = "../spacier/data"  # Replace with your data directory
 
 # Read data from CSV files
 df = pd.read_csv(f"{DATA_DIR}/target.csv")  # Load target
@@ -18,9 +18,12 @@ df_X_pool = pd.read_csv(f"{DATA_DIR}/pool_feature.csv")  # Load pool feature
 
 # Determine the number of cycles from the 'cycle' column,
 # incremented by one for the new cycle
+if "cycle" in df.columns:
+    pass
+else:
+    df["cycle"] = 0  # Add a new column for cycle number
+
 num_cycle = int(df["cycle"].max()) + 1
-q = "cycle<" + str(num_cycle)
-print(q)
 
 # Use spacier's Bayesian Optimization (BO) for
 # selecting indices based on the EHVI method
@@ -29,7 +32,7 @@ index_list = spacier.BO(
     df,
     df_X_pool,
     "sklearn_GP",  # The Gaussian Process model from scikit-learn
-    ["refractive_index", "abbe_number"],  # Target properties for optimization
+    ["Cp", "refractive_index"],  # Target properties for optimization
     standardization=True  # Standardize target before optimization
 ).EHVI(10)
 
@@ -60,7 +63,7 @@ for num in index_list:
             f'export RadonPy_DBID="{pid}"\n',  # Set database ID to PID
             f'export RadonPy_Monomer_ID="{pid}"\n',  # Confirm monomer ID
             f'export RadonPy_SMILES="{smi}"\n',  # Set SMILES for the monomer
-            f'export RadonPy_Monomer_Dir={smi}/analyze\n',  # Set directory for analysis
+            f'export RadonPy_Monomer_Dir={pid}/analyze\n',  # Set directory for analysis
             'export RadonPy_OMP=0\n',  # OpenMP setting
             'export RadonPy_MPI=64\n',  # MPI setting
             'export RadonPy_GPU=0\n',  # GPU setting
